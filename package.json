@@ -1,0 +1,13 @@
+{
+  "name": "flight2bq",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Alex Olivier <alex@alexolivier.me>",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/bigquery": "^1.0.0",
+    "axios": "^0.18.0",
+    "config": "^1.30.0",
+    "yaml-js": "^0.2.3"
+  }
+}
