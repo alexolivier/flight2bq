@@ -1,22 +1,17 @@
+const config = require('config')
 const net = require('net')
 const BigQuery = require('@google-cloud/bigquery')
 
-const PIIP = '192.168.3.175'
-const PIPort = 10001
-const projectId = 'alex-olivier'
-const datasetId = 'flighttracker_dev'
-const tableId = 'aircraft_stream'
-
 // Creates a client
 const bigquery = new BigQuery({
-  projectId: projectId,
+  projectId: config.google.projectId,
   keyFilename: 'google.json'
 })
 
 let batch = []
 
 const client = new net.Socket()
-client.connect(PIPort, PIIP, function () {
+client.connect(config.pi.port, config.pi.ip, function () {
   console.log('Connected')
 })
 
@@ -60,8 +55,8 @@ async function streamToBQ () {
     const rows = batch.slice(0)
     batch = []
     await bigquery
-      .dataset(datasetId)
-      .table(tableId)
+      .dataset(config.google.datasetId)
+      .table(config.google.tableId)
       .insert(rows)
 
     console.log(`${new Date()} - Inserted ${rows.length} rows`)
