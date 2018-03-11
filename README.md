@@ -1,10 +1,12 @@
 # Flight2BQ
-Stream ADS-B data (dump1080 on a RaspberryPi etc) to Google BigQuery
+Stream ADS-B data (dump1080 on a RaspberryPi etc) to Google BigQuery.
+
+Example public dataset can be found in `alex-olivier.flighttracker_dev.aircraft_stream` in BigQuery. Data is from London, UK.
 
 ## Table Schema
 ```
 timestamp	TIMESTAMP	NULLABLE	
-hexid	STRING	NULLABLE	
+hexid STRING	NULLABLE	
 ident	STRING	NULLABLE	
 squawk	INTEGER	NULLABLE	
 alt	INTEGER	NULLABLE	
