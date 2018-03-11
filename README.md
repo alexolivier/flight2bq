@@ -6,7 +6,7 @@ Example live public dataset on London, UK can be found in `alex-olivier.flighttr
 Please let me know if you would like to add data from your location.
 
 ## Todo
-- [ ] Get airfram info from https://opensky-network.org/
+- [ ] Get airframe information from https://opensky-network.org/
 - [ ] Schedules dedupe query
 
 ## Table Schema
