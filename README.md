@@ -6,7 +6,7 @@ Example live public dataset on London, UK can be found in `alex-olivier.flighttr
 Please let me know if you would like to add data from your location.
 
 ## Example Data
-```
+
 | timestamp | hexid | ident | squawk | alt | speed | airGround | lat | lon | heading |
 | --------- | ----- | ----- | ------ | --- | ----- | --------- | --- | --- | ------ |
 | 2018-03-11 21:33:21.000 UTC |	A023AF | EJM685 | 7660 | 10000 | 305 | A | 51.86767 | -0.02373 | 23	 |
@@ -18,7 +18,7 @@ Please let me know if you would like to add data from your location.
 | 2018-03-11 21:33:19.000 UTC | 4CA911 | RYR96JV | 3550 | 35125 | 401 | A | 51.46848 | 1.09154 | 272 |
 | 2018-03-11 21:33:19.000 UTC | 4B1691 | SWR24H | 3053 | 10125 | 308 | A | 51.23309 | 0.1207 | 332	 | 
 | 2018-03-11 21:33:19.000 UTC | 4CC272 | ICE477 | 4462 | 14775 | 389 | A | 51.49393 | 0.15782 | 332 |
-```
+
 
 ## Todo
 - [ ] Get airframe information from https://opensky-network.org/
