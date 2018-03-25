@@ -12,7 +12,7 @@ let batch = []
 
 const client = new net.Socket()
 client.connect(config.pi.port, config.pi.ip, function () {
-  console.log('Connected')
+  console.log(`${new Date()} - Connected to ${config.pi.ip} port ${config.pi.port}`)
 })
 
 client.on('data', function (data) {
@@ -47,12 +47,12 @@ client.on('data', function (data) {
 })
 
 client.on('error', function (err) {
-  console.error('Error', err)
+  console.error(`${new Date()} - Error`, err)
   process.exit(1)
 })
 
 client.on('close', function () {
-  console.log('Connection closed')
+  console.log(`${new Date()} - Connection closed`)
   process.exit(1)
 })
 
