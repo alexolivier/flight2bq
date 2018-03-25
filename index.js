@@ -46,8 +46,14 @@ client.on('data', function (data) {
   }))
 })
 
+client.on('error', function (err) {
+  console.error('Error', err)
+  process.exit(1)
+})
+
 client.on('close', function () {
   console.log('Connection closed')
+  process.exit(1)
 })
 
 async function streamToBQ () {
