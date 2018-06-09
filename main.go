@@ -51,16 +51,27 @@ func main() {
 	var err error
 	if keyfilePtr == "default" {
 		bq, e := bigquery.NewClient(ctx, projectPtr)
+		if e != nil {
+			log.Fatalf("Failed to create client: %v", e)
+		}
 		bqClient = bq
 		ps, e := pubsub.NewClient(ctx, projectPtr)
+		if e != nil {
+			log.Fatalf("Failed to create client: %v", e)
+		}
 		pubsubClient = ps
 		err = e
 	} else {
 		bq, e := bigquery.NewClient(ctx, projectPtr, option.WithCredentialsFile(keyfilePtr))
+		if e != nil {
+			log.Fatalf("Failed to create client: %v", e)
+		}
 		bqClient = bq
 		ps, e := pubsub.NewClient(ctx, projectPtr, option.WithCredentialsFile(keyfilePtr))
+		if e != nil {
+			log.Fatalf("Failed to create client: %v", e)
+		}
 		pubsubClient = ps
-		err = e
 	}
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
