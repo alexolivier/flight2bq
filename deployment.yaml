@@ -1,0 +1,25 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: flight2bq
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flight2bq
+    spec:
+      containers:
+      - name: flight2bq
+        image: gcr.io/alexolivier/flight2bq
+        env:
+          - name: PROJECT
+            value: "alex-olivier"
+          - name: DATASET
+            value: "flighttracker_prod"
+          - name: TABLE
+            value: "aircraft_stream"
+          - name: SUBSCRIPTION
+            value: "flight-data-prod"
+          - name: keyfile
+            value: "/config/keyfile.json"
