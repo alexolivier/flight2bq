@@ -81,7 +81,7 @@ func main() {
 	err = subscription.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
 		var pos position
 		if err := json.Unmarshal(msg.Data, &pos); err != nil {
-			log.Printf("could not decode message data: %#v", msg)
+			println(fmt.Sprintf("could not decode message data: %#v", msg))
 			msg.Ack()
 			return
 		}
@@ -89,13 +89,13 @@ func main() {
 			&pos,
 		}
 		if err := uploader.Put(ctx, items); err != nil {
-			log.Printf("Failed to insert row: %v", err)
+			println(fmt.Sprintf("Failed to insert row: %v", err))
 			return
 		}
 		msg.Ack()
-		log.Printf("Inserted %s", msg.ID)
+		println(fmt.Sprintf("Inserted %s", msg.ID))
 	})
 	if err != nil {
-		log.Fatalf("Failed to subscribe: %v", err)
+		println(fmt.Sprintf("Failed to subscribe: %v", err))
 	}
 }
