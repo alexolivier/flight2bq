@@ -88,5 +88,4 @@ func main() {
 	if err != nil {
 		log.Printf("Failed to subscribe: %v", err)
 	}
-	ctx.Err
 }
