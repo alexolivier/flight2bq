@@ -9,9 +9,16 @@ spec:
       labels:
         app: flight2bq
     spec:
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: flight2bqkey
       containers:
       - name: flight2bq
-        image: gcr.io/alexolivier/flight2bq
+        image: gcr.io/alexolivier/flight2bq:latest
+        volumeMounts:
+          - name: secret-volume
+            mountPath: /config/keyfile.json
         env:
           - name: PROJECT
             value: "alex-olivier"

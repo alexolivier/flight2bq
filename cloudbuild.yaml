@@ -2,9 +2,9 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args: ["build", "--tag=gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID", "."]
   - name: "gcr.io/cloud-builders/docker"
-    args: ["tag", "gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID", "gcr.io/$PROJECT_ID/flight2bq"]
+    args: ["tag", "gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID", "gcr.io/$PROJECT_ID/flight2bq:latest"]
 images: 
   - "gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID"
-  - "gcr.io/$PROJECT_ID/flight2bq"
+  - "gcr.io/$PROJECT_ID/flight2bq:latest"
 tags:
   - "flight2bq"
