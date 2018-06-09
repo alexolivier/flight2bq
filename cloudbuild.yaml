@@ -3,8 +3,16 @@ steps:
     args: ["build", "--tag=gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID", "."]
   - name: "gcr.io/cloud-builders/docker"
     args: ["tag", "gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID", "gcr.io/$PROJECT_ID/flight2bq:latest"]
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['scale', '--replicas=0', 'deploy/flight2bq']
+    env:
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=aok8s'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['scale', '--replicas=1', 'deploy/flight2bq']
+    env:
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=aok8s'
 images: 
   - "gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID"
   - "gcr.io/$PROJECT_ID/flight2bq:latest"
-tags:
-  - "flight2bq"
