@@ -95,4 +95,7 @@ func main() {
 		msg.Ack()
 		log.Printf("Inserted %s", msg.ID)
 	})
+	if err != nil {
+		log.Fatalf("Failed to subscribe: %v", err)
+	}
 }
