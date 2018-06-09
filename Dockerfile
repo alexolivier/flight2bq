@@ -1,12 +1,17 @@
-FROM node:8
 
-RUN mkdir -p /opt/flight2bq
-WORKDIR /opt/flight2bq
+FROM golang:1.10 AS builder
 
-ADD package.json /opt/flight2bq/package.json
-ADD yarn.lock /opt/flight2bq/yarn.lock
-RUN yarn install --production
-ADD . /opt/flight2bq
-RUN touch /opt/flight2bq/google.json && touch /opt/flight2bq/config/local.yml
+# Download and install the latest release of dep
+ADD https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64 /usr/bin/dep
+RUN chmod +x /usr/bin/dep
 
-CMD node index.js
+# Copy the code from the host and compile it
+WORKDIR $GOPATH/src/github.com/alexolivier/flight2bigquery
+COPY Gopkg.toml Gopkg.lock ./
+RUN dep ensure --vendor-only
+COPY . ./
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o /app .
+
+FROM scratch
+COPY --from=builder /app ./
+ENTRYPOINT ["./app"]

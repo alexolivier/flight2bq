@@ -1,7 +1,8 @@
 # Flight2BQ
 Stream ADS-B data (RTLSDR dump1090 on a RaspberryPi etc) to Google BigQuery.
 
-Example live public dataset on London, UK can be found in `alex-olivier.flighttracker_dev.aircraft_stream` in BigQuery.
+
+Example live public dataset on London, UK can be found in `alex-olivier.flighttracker_prod.aircraft_stream` in BigQuery.
 
 Please let me know if you would like to add data from your location.
 
