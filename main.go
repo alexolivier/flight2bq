@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"cloud.google.com/go/bigquery"
@@ -72,7 +71,7 @@ func main() {
 	err = subscription.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
 		var pos position
 		if err := json.Unmarshal(msg.Data, &pos); err != nil {
-			println(fmt.Sprintf("could not decode message data: %#v", msg))
+			log.Printf("could not decode message data: %#v", msg)
 			msg.Ack()
 			return
 		}
@@ -89,4 +88,5 @@ func main() {
 	if err != nil {
 		log.Printf("Failed to subscribe: %v", err)
 	}
+	ctx.Err
 }

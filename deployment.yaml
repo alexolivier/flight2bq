@@ -30,5 +30,7 @@ spec:
             value: "aircraft_stream"
           - name: SUBSCRIPTION
             value: "flight-data-prod"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /config/flight2bqkey
           - name: KEYFILE
-            value: "/config/flight2bqkey"
+            value: /config/flight2bqkey
