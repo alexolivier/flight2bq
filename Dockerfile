@@ -1,5 +1,5 @@
 
-FROM golang:1.10 AS builder
+FROM golang:1.10-alpine AS builder
 
 # Download and install the latest release of dep
 ADD https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64 /usr/bin/dep
@@ -12,6 +12,6 @@ RUN dep ensure --vendor-only
 COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o /app .
 
-FROM scratch
+FROM alpine
 COPY --from=builder /app ./
 ENTRYPOINT ["./app"]
