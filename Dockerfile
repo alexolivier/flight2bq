@@ -10,7 +10,7 @@ WORKDIR $GOPATH/src/github.com/alexolivier/flight2bigquery
 COPY Gopkg.toml Gopkg.lock ./
 RUN dep ensure --vendor-only
 COPY . ./
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o /app .
+RUN go build -o /app .
 
 FROM alpine
 COPY --from=builder /app ./
