@@ -3,6 +3,8 @@ steps:
     args: ["build", "--tag=gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID", "."]
   - name: "gcr.io/cloud-builders/docker"
     args: ["tag", "gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID", "gcr.io/$PROJECT_ID/flight2bq:latest"]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/flight2bq:$REVISION_ID", "gcr.io/$PROJECT_ID/flight2bq:latest"]    
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['scale', '--replicas=0', 'deploy/flight2bq']
     env:
