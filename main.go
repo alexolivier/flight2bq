@@ -38,11 +38,11 @@ func main() {
 	flag.StringVar(&subscriptionPtr, "subscription", "flight-data-prod-dev", "Pub/Sub Topic Name")
 	flag.StringVar(&keyfilePtr, "keyfile", "default", "Path to keyfile")
 	flag.Parse()
-	println(fmt.Sprintf("Project: %s", projectPtr))
-	println(fmt.Sprintf("Dataset: %s", datasetPtr))
-	println(fmt.Sprintf("Table: %s", tablePtr))
-	println(fmt.Sprintf("Subscription: %s", subscriptionPtr))
-	println(fmt.Sprintf("Keyfile: %s", keyfilePtr))
+	log.Printf("Project: %s", projectPtr)
+	log.Printf("Dataset: %s", datasetPtr)
+	log.Printf("Table: %s", tablePtr)
+	log.Printf("Subscription: %s", subscriptionPtr)
+	log.Printf("Keyfile: %s", keyfilePtr)
 
 	ctx := context.Background()
 
@@ -51,30 +51,21 @@ func main() {
 	var err error
 	if keyfilePtr == "default" {
 		bq, e := bigquery.NewClient(ctx, projectPtr)
-		if e != nil {
-			log.Fatalf("Failed to create client: %v", e)
-		}
 		bqClient = bq
 		ps, e := pubsub.NewClient(ctx, projectPtr)
-		if e != nil {
-			log.Fatalf("Failed to create client: %v", e)
-		}
 		pubsubClient = ps
 		err = e
 	} else {
 		bq, e := bigquery.NewClient(ctx, projectPtr, option.WithCredentialsFile(keyfilePtr))
-		if e != nil {
-			log.Fatalf("Failed to create client: %v", e)
-		}
 		bqClient = bq
 		ps, e := pubsub.NewClient(ctx, projectPtr, option.WithCredentialsFile(keyfilePtr))
-		if e != nil {
-			log.Fatalf("Failed to create client: %v", e)
-		}
 		pubsubClient = ps
+		err = e
 	}
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
+	} else {
+		log.Println("Clients ready")
 	}
 	uploader := bqClient.Dataset(datasetPtr).Table(tablePtr).Uploader()
 	subscription := pubsubClient.Subscription(subscriptionPtr)
@@ -89,13 +80,13 @@ func main() {
 			&pos,
 		}
 		if err := uploader.Put(ctx, items); err != nil {
-			println(fmt.Sprintf("Failed to insert row: %v", err))
+			log.Printf("Failed to insert row: %v", err)
 			return
 		}
 		msg.Ack()
-		println(fmt.Sprintf("Inserted %s", msg.ID))
+		log.Printf("Inserted %s", msg.ID)
 	})
 	if err != nil {
-		println(fmt.Sprintf("Failed to subscribe: %v", err))
+		log.Printf("Failed to subscribe: %v", err)
 	}
 }
