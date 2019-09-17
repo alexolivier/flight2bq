@@ -1,21 +1,11 @@
-package main
+package Flight2BQ
 
 import (
 	"encoding/json"
 	"log"
-
+	"context"
 	"cloud.google.com/go/bigquery"
-	"cloud.google.com/go/pubsub"
-	"github.com/namsral/flag"
-	"golang.org/x/net/context"
-	"google.golang.org/api/option"
 )
-
-var projectPtr string
-var datasetPtr string
-var tablePtr string
-var subscriptionPtr string
-var keyfilePtr string
 
 type position struct {
 	Timestamp int64   `json:"timestamp"`
@@ -30,62 +20,28 @@ type position struct {
 	Heading   int64   `json:"heading"`
 }
 
-func main() {
-	flag.StringVar(&projectPtr, "project", "alex-olivier", "GCP Project")
-	flag.StringVar(&datasetPtr, "dataset", "flighttracker_dev", "BigQuery Dataset")
-	flag.StringVar(&tablePtr, "table", "aircraft_stream", "BigQuery Table")
-	flag.StringVar(&subscriptionPtr, "subscription", "flight-data-prod-dev", "Pub/Sub Topic Name")
-	flag.StringVar(&keyfilePtr, "keyfile", "default", "Path to keyfile")
-	flag.Parse()
-	log.Printf("Project: %s", projectPtr)
-	log.Printf("Dataset: %s", datasetPtr)
-	log.Printf("Table: %s", tablePtr)
-	log.Printf("Subscription: %s", subscriptionPtr)
-	log.Printf("Keyfile: %s", keyfilePtr)
+type PubSubMessage struct {
+	Data []byte `json:"data"`
+}
 
-	ctx := context.Background()
-
+func Flight2BQ(ctx context.Context, msg PubSubMessage) error {
 	var bqClient *bigquery.Client
-	var pubsubClient *pubsub.Client
-	var err error
-	if keyfilePtr == "default" {
-		bq, e := bigquery.NewClient(ctx, projectPtr)
-		bqClient = bq
-		ps, e := pubsub.NewClient(ctx, projectPtr)
-		pubsubClient = ps
-		err = e
-	} else {
-		bq, e := bigquery.NewClient(ctx, projectPtr, option.WithCredentialsFile(keyfilePtr))
-		bqClient = bq
-		ps, e := pubsub.NewClient(ctx, projectPtr, option.WithCredentialsFile(keyfilePtr))
-		pubsubClient = ps
-		err = e
+	bq, _ := bigquery.NewClient(ctx, "alex-olivier")
+	bqClient = bq
+	uploader := bqClient.Dataset("flighttracker_dev").Table("aircraft_stream").Uploader()
+	var pos position
+
+	if err := json.Unmarshal(msg.Data, &pos); err != nil {
+		log.Printf("could not decode message data: %#v", msg)
+		return err
 	}
-	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-	} else {
-		log.Println("Clients ready")
+	items := []*position{
+		&pos,
 	}
-	uploader := bqClient.Dataset(datasetPtr).Table(tablePtr).Uploader()
-	subscription := pubsubClient.Subscription(subscriptionPtr)
-	err = subscription.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
-		var pos position
-		if err := json.Unmarshal(msg.Data, &pos); err != nil {
-			log.Printf("could not decode message data: %#v", msg)
-			msg.Ack()
-			return
-		}
-		items := []*position{
-			&pos,
-		}
-		if err := uploader.Put(ctx, items); err != nil {
-			log.Printf("Failed to insert row: %v", err)
-			return
-		}
-		msg.Ack()
-		log.Printf("Inserted %s", msg.ID)
-	})
-	if err != nil {
-		log.Printf("Failed to subscribe: %v", err)
+	if err := uploader.Put(ctx, items); err != nil {
+		log.Printf("Failed to insert row: %v", err)
+		return err
 	}
+	log.Printf("Inserted")
+	return nil
 }

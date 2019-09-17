@@ -1,7 +1,0 @@
-google:
-  projectId: alex-olivier
-  datasetId: flighttracker_dev
-  tableId: aircraft_stream
-pi:
-  port: 10001
-  ip: 192.168.3.5
