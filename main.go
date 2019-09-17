@@ -3,6 +3,7 @@ package Flight2BQ
 import (
 	"encoding/json"
 	"log"
+	"os"
 	"context"
 	"cloud.google.com/go/bigquery"
 )
@@ -26,9 +27,9 @@ type PubSubMessage struct {
 
 func Flight2BQ(ctx context.Context, msg PubSubMessage) error {
 	var bqClient *bigquery.Client
-	bq, _ := bigquery.NewClient(ctx, "alex-olivier")
+	bq, _ := bigquery.NewClient(ctx, os.Getenv("GCP_PROJECT"))
 	bqClient = bq
-	uploader := bqClient.Dataset("flighttracker_dev").Table("aircraft_stream").Uploader()
+	uploader := bqClient.Dataset(os.Getenv("DATASET")).Table(os.Getenv("TABLE")).Uploader()
 	var pos position
 
 	if err := json.Unmarshal(msg.Data, &pos); err != nil {
